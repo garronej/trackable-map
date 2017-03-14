@@ -1,0 +1,29 @@
+{
+  "name": "trackable-map",
+  "description": "ES2015 Map that throw event on set and delete",
+  "main": "./out/lib/index.js",
+  "types": "./out/lib/index.d.ts",
+  "version": "1.0.0",
+  "scripts": {
+    "postinstall": "npm run tsc",
+    "tsc": "./node_modules/.bin/tsc -p ./tsconfig.json",
+    "test": "node ./out/test/main"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/garronej/trackable-map.git"
+  },
+  "author": "Joseph Garrone",
+  "license": "MIT",
+  "keywords": [
+    "typeScript",
+    "Map",
+    "ts-events"
+  ],
+  "dependencies": {
+    "@types/node": "^4.0.0",
+    "ts-events-extended": "garronej/ts-events-extended",
+    "typescript": "^2.2.1"
+  },
+  "devDependencies": {}
+}
