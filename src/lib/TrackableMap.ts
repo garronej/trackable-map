@@ -75,6 +75,19 @@ export class TrackableMap<K,V>{
 
     }
 
+    public valuesAsArraySortedByKey(): V[] {
+
+        let out: V[]= [];
+
+        let obj= this.toObject();
+
+        for( let key of this.intKeysAsSortedArray() )
+            out.push(obj[key]);
+        
+        return out;
+
+    }
+
     public valuesAsArray(): V[] {
 
         let out: V[]= [];

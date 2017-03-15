@@ -10,6 +10,8 @@ map.set("4", "third");
 
 console.log(map.intKeysAsSortedArray());
 
+console.log(map.valuesAsArraySortedByKey());
+
 
 let obj= { 
     "-1": "first",
@@ -18,6 +20,7 @@ let obj= {
 };
 
 console.log(TrackableMap.intKeyAsSortedArray(obj));
+
 
 
 
