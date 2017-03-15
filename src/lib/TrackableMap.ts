@@ -69,6 +69,12 @@ export class TrackableMap<K,V>{
 
     }
 
+    public intKeysAsSortedArray(): number[] {
+
+        return TrackableMap.intKeyAsSortedArray(this.toObject());
+
+    }
+
     public valuesAsArray(): V[] {
 
         let out: V[]= [];
@@ -99,5 +105,26 @@ export class TrackableMap<K,V>{
         return out;
 
     }
+
+
+    public static intKeyAsSortedArray(object: Object): number[]{
+
+        let arr= Object.keys(object)
+        .map(indexStr=> {
+            let index= parseInt(indexStr);
+            if( isNaN(index) ) return null;
+            return index;
+        });
+
+        let index: number;
+
+        while( (index= arr.indexOf(null))>=0 )
+            arr.splice(index,1);
+
+        return (arr as number[]).sort((index1, index2) => index1 - index2);
+
+
+    }
+
 
 }
