@@ -45,26 +45,37 @@ console.assert(JSON.stringify(map.valuesAsArraySortedByKey()) === `["foo","bar",
 
 console.assert(JSON.stringify(map.toObject()) === `{"1":"foo","2":"bar","3":"foo"}`);
 
-map = new TrackableMap<number, string>();
+let map1 = new TrackableMap<number, string>();
 
 let evtSet= false;
 
-map.evtSet.attachOnce( () => evtSet = true );
-map.evtSet.attachOnce( ([key, value]) => console.assert(key === 666 && value === "666"));
-map.evtSet.attachOnce( ([key]) => console.assert(key === 666));
-map.evtSet.attachOnce( ([_, value]) => console.assert(value === "666"));
+map1.evtSet.attachOnce( () => evtSet = true );
+map1.evtSet.attachOnce( ([value, key]) => console.assert(key === 666 && value === "666"));
+map1.evtSet.attachOnce( ([_, key]) => console.assert(key === 666));
+map1.evtSet.attachOnce( ([value]) => console.assert(value === "666"));
 
-map.set(666,"666");
+map1.set(666,"666");
 
 let evtDelete= false;
 
-map.evtDelete.attachOnce( () => evtDelete = true );
-map.evtDelete.attachOnce( ([key, value]) => console.assert(key === 666 && value === "666"));
-map.evtDelete.attachOnce( ([key]) => console.assert(key === 666));
-map.evtDelete.attachOnce( ([_, value]) => console.assert(value === "666"));
+map1.evtDelete.attachOnce( () => evtDelete = true );
+map1.evtDelete.attachOnce( ([value, key]) => console.assert(key === 666 && value === "666"));
+map1.evtDelete.attachOnce( ([_, key]) => console.assert(key === 666));
+map1.evtDelete.attachOnce( ([value]) => console.assert(value === "666"));
 
-map.delete(666);
+map1.delete(666);
 
-console.assert( !map.size && evtSet && evtDelete );
+console.assert( !map1.size && evtSet && evtDelete );
+
+
+
+let map2= new TrackableMap<string, { p1: string; p2: string }>();
+
+map2.evtSet.attachOnce( ([{p1, p2}]) => console.assert( p1 === "foo" && p2 === "bar" ));
+
+map2.set("_", { "p1": "foo", "p2": "bar" });
 
 console.log("PASS");
+
+
+

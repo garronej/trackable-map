@@ -4,8 +4,8 @@ export class TrackableMap<K,V>{
 
     private readonly map= new Map<K,V>();
 
-    public readonly evtSet= new SyncEvent<[K,V]>();
-    public readonly evtDelete= new SyncEvent<[K,V]>();
+    public readonly evtSet= new SyncEvent<[V,K]>();
+    public readonly evtDelete= new SyncEvent<[V,K]>();
 
     public get(key: K): V | undefined{
         return this.map.get(key);
@@ -42,7 +42,7 @@ export class TrackableMap<K,V>{
 
         this.map.set(key, value);
 
-        this.evtSet.post([key, value]);
+        this.evtSet.post([value, key]);
 
         return this;
 
@@ -56,7 +56,7 @@ export class TrackableMap<K,V>{
 
         this.map.delete(key);
 
-        this.evtDelete.post([key, value]);
+        this.evtDelete.post([value, key]);
 
         return true;
 
