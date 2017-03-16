@@ -4,11 +4,15 @@ export class TrackableMap<K,V>{
 
     private readonly map= new Map<K,V>();
 
-    public readonly evtSet= new SyncEvent<{key: K, value: V}>();
-    public readonly evtDelete= new SyncEvent<{key: K, value: V}>();
+    public readonly evtSet= new SyncEvent<[K,V]>();
+    public readonly evtDelete= new SyncEvent<[K,V]>();
 
     public get(key: K): V | undefined{
         return this.map.get(key);
+    }
+
+    public get size(): number {
+        return this.map.size;
     }
 
     public getBy(propKey: string, propValue: any): V | undefined {
@@ -38,7 +42,7 @@ export class TrackableMap<K,V>{
 
         this.map.set(key, value);
 
-        this.evtSet.post({key, value});
+        this.evtSet.post([key, value]);
 
         return this;
 
@@ -52,7 +56,7 @@ export class TrackableMap<K,V>{
 
         this.map.delete(key);
 
-        this.evtDelete.post({ key, value });
+        this.evtDelete.post([key, value]);
 
         return true;
 
@@ -69,6 +73,32 @@ export class TrackableMap<K,V>{
 
     }
 
+    public valuesAsArrayNoDuplicate(): V[] {
+
+        let out: V[] = [];
+
+        this.map.forEach( value => {
+
+            if( out.indexOf(value) >= 0 ) 
+                return;
+
+            out.push(value);
+        });
+
+        return out;
+
+    }
+
+    public valuesAsArray(): V[] {
+
+        let out: V[] = [];
+
+        this.map.forEach(value => out.push(value));
+
+        return out;
+
+    }
+
     public intKeysAsSortedArray(): number[] {
 
         return TrackableMap.intKeyAsSortedArray(this.toObject());
@@ -77,36 +107,17 @@ export class TrackableMap<K,V>{
 
     public valuesAsArraySortedByKey(): V[] {
 
-        let out: V[]= [];
+        let out: V[] = [];
 
-        let obj= this.toObject();
+        let obj = this.toObject();
 
-        for( let key of this.intKeysAsSortedArray() )
+        for (let key of this.intKeysAsSortedArray())
             out.push(obj[key]);
-        
-        return out;
-
-    }
-
-    public valuesAsArray(): V[] {
-
-        let out: V[]= [];
-
-        let value: V;
-
-        for( let key of this.keysAsArray() ){
-
-            value= this.get(key)!;
-
-            if( out.indexOf(value) >= 0 ) continue;
-
-            out.push(value);
-
-        }
 
         return out;
 
     }
+
 
     public toObject(): { [key: string]: V } {
 
@@ -120,19 +131,19 @@ export class TrackableMap<K,V>{
     }
 
 
-    public static intKeyAsSortedArray(object: Object): number[]{
+    public static intKeyAsSortedArray(object: Object): number[] {
 
-        let arr= Object.keys(object)
-        .map(indexStr=> {
-            let index= parseInt(indexStr);
-            if( isNaN(index) ) return null;
-            return index;
-        });
+        let arr = Object.keys(object)
+            .map(indexStr => {
+                let index = parseInt(indexStr);
+                if (isNaN(index)) return null;
+                return index;
+            });
 
         let index: number;
 
-        while( (index= arr.indexOf(null))>=0 )
-            arr.splice(index,1);
+        while ((index = arr.indexOf(null)) >= 0)
+            arr.splice(index, 1);
 
         return (arr as number[]).sort((index1, index2) => index1 - index2);
 
