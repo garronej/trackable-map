@@ -1,8 +1,8 @@
 {
   "name": "trackable-map",
   "description": "ES2015 Map that throw event on set and delete",
-  "main": "./out/lib/index.js",
-  "types": "./out/lib/index.d.ts",
+  "main": "./dist/lib/index.js",
+  "types": "./dist/lib/index.d.ts",
   "version": "1.4.0",
   "scripts": {
     "tsc": "./node_modules/.bin/tsc -p ./tsconfig.json",
