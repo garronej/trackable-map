@@ -9,8 +9,9 @@
                     "es2015"
             ],
         "declaration": true,
-        "outDir": "./out",
-        "strictNullChecks": true
+        "outDir": "./dist",
+        "strictNullChecks": true,
+        "sourceMap": true
     },
     "filesGlob": [
         "./src/**/*.ts"
