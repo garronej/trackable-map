@@ -77,15 +77,20 @@ map2.set("_", { "p1": "foo", "p2": "bar" });
 
 
 
-let map3= new TrackableMap<string, { foo: string }>();
+let map3= new TrackableMap<never[], { foo: string }>();
 
+let srcKey= [];
+let srcObj= { "foo": "baz" };
 
-map3.set("a", { "foo": "bar" });
-map3.set("b", { "foo": "baz" });
+map3.set([], { "foo": "bar" });
+map3.set(srcKey, srcObj);
 
 let obj=map3.find(({foo})=> foo === "baz");
 
 console.assert( obj!.foo === "baz");
+console.assert( obj === srcObj );
 
-console.log("PASS");
+console.assert( map3.keyOf(srcObj) === srcKey );
+
+console.log("PASS!");
 

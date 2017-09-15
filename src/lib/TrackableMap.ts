@@ -30,6 +30,15 @@ export class TrackableMap<K,V>{
 
     }
 
+    public keyOf( value: V ): K | undefined {
+
+        for( let key of this.keys() )
+            if( this.get(key) === value ) return key;
+
+        return undefined;
+
+    }
+
     public get size(): number {
         return this.map.size;
     }

@@ -7,6 +7,7 @@ export declare class TrackableMap<K, V> {
     keys(): IterableIterator<K>;
     get(key: K): V | undefined;
     find(match: (value: V) => boolean): V | undefined;
+    keyOf(value: V): K | undefined;
     readonly size: number;
     getBy(propKey: string, propValue: any): V | undefined;
     has(key: K): boolean;
