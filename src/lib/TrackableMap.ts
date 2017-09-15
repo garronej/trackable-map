@@ -7,8 +7,27 @@ export class TrackableMap<K,V>{
     public readonly evtSet= new SyncEvent<[V,K]>();
     public readonly evtDelete= new SyncEvent<[V,K]>();
 
+    public values() {
+        return this.map.values();
+    }
+
+    public keys() {
+        return this.map.keys();
+    }
+
     public get(key: K): V | undefined{
         return this.map.get(key);
+    }
+
+    public find(
+        match: (value: V)=> boolean
+    ): V | undefined{
+
+        for( let value of this.values())
+            if( match(value) ) return value;
+        
+        return undefined;
+
     }
 
     public get size(): number {

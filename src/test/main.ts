@@ -75,7 +75,17 @@ map2.evtSet.attachOnce( ([{p1, p2}]) => console.assert( p1 === "foo" && p2 === "
 
 map2.set("_", { "p1": "foo", "p2": "bar" });
 
+
+
+let map3= new TrackableMap<string, { foo: string }>();
+
+
+map3.set("a", { "foo": "bar" });
+map3.set("b", { "foo": "baz" });
+
+let obj=map3.find(({foo})=> foo === "baz");
+
+console.assert( obj!.foo === "baz");
+
 console.log("PASS");
-
-
 
