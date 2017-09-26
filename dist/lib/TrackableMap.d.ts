@@ -3,6 +3,9 @@ export declare class TrackableMap<K, V> {
     private readonly map;
     readonly evtSet: SyncEvent<[V, K]>;
     readonly evtDelete: SyncEvent<[V, K]>;
+    static [Symbol.species]: typeof TrackableMap;
+    [Symbol.iterator](): IterableIterator<[K, V]>;
+    constructor(iterable?: Iterable<[K, V]>);
     values(): IterableIterator<V>;
     keys(): IterableIterator<K>;
     entries(): IterableIterator<[K, V]>;

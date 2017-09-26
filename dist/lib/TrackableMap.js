@@ -12,11 +12,13 @@ var __values = (this && this.__values) || function (o) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var ts_events_extended_1 = require("ts-events-extended");
 var TrackableMap = /** @class */ (function () {
-    function TrackableMap() {
-        this.map = new Map();
+    function TrackableMap(iterable) {
+        if (iterable === void 0) { iterable = []; }
         this.evtSet = new ts_events_extended_1.SyncEvent();
         this.evtDelete = new ts_events_extended_1.SyncEvent();
+        this.map = new Map(iterable);
     }
+    TrackableMap.prototype[Symbol.iterator] = function () { return this.map.entries(); };
     TrackableMap.prototype.values = function () {
         return this.map.values();
     };
@@ -161,6 +163,7 @@ var TrackableMap = /** @class */ (function () {
             arr.splice(index, 1);
         return arr.sort(function (index1, index2) { return index1 - index2; });
     };
+    TrackableMap[Symbol.species] = TrackableMap;
     return TrackableMap;
 }());
 exports.TrackableMap = TrackableMap;

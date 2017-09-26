@@ -1,11 +1,19 @@
 import { SyncEvent } from "ts-events-extended";
 
+
 export class TrackableMap<K,V>{
 
-    private readonly map= new Map<K,V>();
+    private readonly map: Map<K,V>;
 
     public readonly evtSet= new SyncEvent<[V,K]>();
     public readonly evtDelete= new SyncEvent<[V,K]>();
+
+    public static [Symbol.species]= TrackableMap;
+    public [Symbol.iterator]() { return this.map.entries(); }
+
+    constructor(iterable: Iterable<[K,V]> = []){
+        this.map= new Map(iterable);
+    }
 
     public values() {
         return this.map.values();
