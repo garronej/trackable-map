@@ -99,9 +99,10 @@ var TrackableMap = /** @class */ (function () {
         return this;
     };
     TrackableMap.prototype.delete = function (key) {
-        var value = this.map.get(key);
-        if (!value)
+        var has = this.map.has(key);
+        if (!has)
             return false;
+        var value = this.map.get(key);
         this.map.delete(key);
         this.evtDelete.post([value, key]);
         return true;

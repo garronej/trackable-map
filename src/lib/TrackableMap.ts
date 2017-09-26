@@ -78,9 +78,11 @@ export class TrackableMap<K,V>{
 
     public delete(key: K): boolean {
 
-        let value = this.map.get(key);
+        let has= this.map.has(key);
 
-        if (!value) return false;
+        if( !has ) return false;
+
+        let value = this.map.get(key)!;
 
         this.map.delete(key);
 
