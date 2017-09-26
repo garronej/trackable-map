@@ -15,6 +15,10 @@ export class TrackableMap<K,V>{
         return this.map.keys();
     }
 
+    public entries() {
+        return this.map.entries();
+    }
+
     public get(key: K): V | undefined{
         return this.map.get(key);
     }
@@ -39,27 +43,10 @@ export class TrackableMap<K,V>{
 
     }
 
-    public get size(): number {
+    public get size() {
         return this.map.size;
     }
 
-    public getBy(propKey: string, propValue: any): V | undefined {
-
-        for( let key of this.keysAsArray() ){
-
-            let value= this.get(key);
-
-            if( !( value instanceof Object ) )
-                continue;
-            
-            if( value[propKey] === propValue )
-                return value;
-            
-        }
-
-        return undefined;
-
-    }
 
     public has(key: K): boolean {
         return this.map.has(key);

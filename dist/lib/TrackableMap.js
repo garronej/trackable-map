@@ -23,6 +23,9 @@ var TrackableMap = /** @class */ (function () {
     TrackableMap.prototype.keys = function () {
         return this.map.keys();
     };
+    TrackableMap.prototype.entries = function () {
+        return this.map.entries();
+    };
     TrackableMap.prototype.get = function (key) {
         return this.map.get(key);
     };
@@ -69,27 +72,6 @@ var TrackableMap = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
-    TrackableMap.prototype.getBy = function (propKey, propValue) {
-        try {
-            for (var _a = __values(this.keysAsArray()), _b = _a.next(); !_b.done; _b = _a.next()) {
-                var key = _b.value;
-                var value = this.get(key);
-                if (!(value instanceof Object))
-                    continue;
-                if (value[propKey] === propValue)
-                    return value;
-            }
-        }
-        catch (e_3_1) { e_3 = { error: e_3_1 }; }
-        finally {
-            try {
-                if (_b && !_b.done && (_c = _a.return)) _c.call(_a);
-            }
-            finally { if (e_3) throw e_3.error; }
-        }
-        return undefined;
-        var e_3, _c;
-    };
     TrackableMap.prototype.has = function (key) {
         return this.map.has(key);
     };
@@ -138,15 +120,15 @@ var TrackableMap = /** @class */ (function () {
                 out.push(obj[key]);
             }
         }
-        catch (e_4_1) { e_4 = { error: e_4_1 }; }
+        catch (e_3_1) { e_3 = { error: e_3_1 }; }
         finally {
             try {
                 if (_b && !_b.done && (_c = _a.return)) _c.call(_a);
             }
-            finally { if (e_4) throw e_4.error; }
+            finally { if (e_3) throw e_3.error; }
         }
         return out;
-        var e_4, _c;
+        var e_3, _c;
     };
     TrackableMap.prototype.toObject = function () {
         var out = {};
@@ -156,15 +138,15 @@ var TrackableMap = /** @class */ (function () {
                 out[key.toString()] = this.map.get(key);
             }
         }
-        catch (e_5_1) { e_5 = { error: e_5_1 }; }
+        catch (e_4_1) { e_4 = { error: e_4_1 }; }
         finally {
             try {
                 if (_b && !_b.done && (_c = _a.return)) _c.call(_a);
             }
-            finally { if (e_5) throw e_5.error; }
+            finally { if (e_4) throw e_4.error; }
         }
         return out;
-        var e_5, _c;
+        var e_4, _c;
     };
     TrackableMap.intKeyAsSortedArray = function (object) {
         var arr = Object.keys(object)
