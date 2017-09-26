@@ -151,7 +151,7 @@ var TrackableMap = /** @class */ (function () {
     TrackableMap.prototype.toObject = function () {
         var out = {};
         try {
-            for (var _a = __values(this.keysAsArray()), _b = _a.next(); !_b.done; _b = _a.next()) {
+            for (var _a = __values(this.map.keys()), _b = _a.next(); !_b.done; _b = _a.next()) {
                 var key = _b.value;
                 out[key.toString()] = this.map.get(key);
             }

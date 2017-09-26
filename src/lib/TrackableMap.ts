@@ -153,7 +153,7 @@ export class TrackableMap<K,V>{
 
         let out = {};
 
-        for (let key of this.keysAsArray())
+        for (let key of this.map.keys())
             out[key.toString()] = this.map.get(key);
 
         return out;
