@@ -16,6 +16,7 @@ export declare class TrackableMap<K, V> {
     delete(key: K): boolean;
     keySet(): Set<K>;
     valueSet(): Set<V>;
+    update(key: K, newValue: V): V | undefined;
     find(match: (value: V) => boolean): V | undefined;
     keyOf(value: V): K | undefined;
     keysAsArray(): K[];

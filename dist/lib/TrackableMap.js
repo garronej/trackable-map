@@ -91,6 +91,15 @@ var TrackableMap = /** @class */ (function () {
         return out;
         var e_2, _c;
     };
+    TrackableMap.prototype.update = function (key, newValue) {
+        if (!this.map.has(key)) {
+            this.set(key, newValue);
+            return undefined;
+        }
+        var oldValue = this.map.get(key);
+        this.map.set(key, newValue);
+        return oldValue;
+    };
     TrackableMap.prototype.find = function (match) {
         try {
             for (var _a = __values(this.values()), _b = _a.next(); !_b.done; _b = _a.next()) {

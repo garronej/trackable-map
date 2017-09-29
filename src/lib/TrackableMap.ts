@@ -90,6 +90,24 @@ export class TrackableMap<K,V>{
 
     }
 
+    public update(key: K, newValue: V): V | undefined {
+
+        if( !this.map.has(key) ){
+
+            this.set(key, newValue);
+
+            return undefined;
+
+        }
+
+        let oldValue= this.map.get(key)!;
+
+        this.map.set(key, newValue);
+
+        return oldValue;
+
+    }
+
 
     public find(
         match: (value: V)=> boolean

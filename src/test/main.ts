@@ -155,4 +155,34 @@ import { TrackableMap } from "../lib/index";
 
 })();
 
-console.log("PASS!");
+(async ()=>{
+
+    let map= new TrackableMap<number, string>();
+
+    map.set(0, "foo");
+
+    let prSet1= map.evtSet.waitFor(100);
+
+    console.assert( map.update(0, "bar") === "foo" );
+
+    console.assert( map.get(0) === "bar" );
+
+    try{
+
+        await prSet1;
+
+        console.assert(false);
+
+    }catch{ }
+
+    let prSet2= map.evtSet.waitFor(100);
+
+    console.assert( map.update(1, "baz") === undefined );
+
+    let [ value, key ]= await prSet2;
+
+    console.assert( (key === 1) && ( value === "baz" ));
+
+})();
+
+console.log("ALL TESTS PASSED");
