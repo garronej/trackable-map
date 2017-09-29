@@ -129,4 +129,30 @@ import { TrackableMap } from "../lib/index";
 
 })();
 
-console.log("PASS");
+
+(()=>{
+
+    let map = new TrackableMap([
+        [0, "foo"],
+        [1, "foo"],
+        [2, "bar"]
+    ]);
+
+    let keysAsArray= new Array<number>();
+
+    for( let key of map.keySet() )
+        keysAsArray.push(key);
+    
+    console.assert(JSON.stringify(keysAsArray) === JSON.stringify(map.keysAsArray()));
+
+    let valuesAsArrayNoDuplicate= new Array<string>();
+
+    for( let value of map.valueSet() )
+        valuesAsArrayNoDuplicate.push(value);
+
+    console.assert(JSON.stringify(valuesAsArrayNoDuplicate) === JSON.stringify(map.valuesAsArrayNoDuplicate()));
+
+
+})();
+
+console.log("PASS!");

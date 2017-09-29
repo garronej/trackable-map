@@ -31,26 +31,6 @@ export class TrackableMap<K,V>{
         return this.map.get(key);
     }
 
-    public find(
-        match: (value: V)=> boolean
-    ): V | undefined{
-
-        for( let value of this.values())
-            if( match(value) ) return value;
-        
-        return undefined;
-
-    }
-
-    public keyOf( value: V ): K | undefined {
-
-        for( let key of this.keys() )
-            if( this.get(key) === value ) return key;
-
-        return undefined;
-
-    }
-
     public get size() {
         return this.map.size;
     }
@@ -88,6 +68,50 @@ export class TrackableMap<K,V>{
 
     }
 
+    public keySet() {
+
+        let out= new Set<K>();
+
+        for( let key of this.map.keys() )
+            out.add(key);
+        
+        return out;
+
+    }
+
+    public valueSet() {
+
+        let out= new Set<V>();
+
+        for( let value of this.map.values() )
+            out.add(value);
+
+        return out;
+
+    }
+
+
+    public find(
+        match: (value: V)=> boolean
+    ): V | undefined{
+
+        for( let value of this.values())
+            if( match(value) ) return value;
+        
+        return undefined;
+
+    }
+
+    public keyOf( value: V ): K | undefined {
+
+        for( let key of this.keys() )
+            if( this.get(key) === value ) return key;
+
+        return undefined;
+
+    }
+
+
     public keysAsArray(): K[] {
 
         let out: K[] = [];
@@ -102,13 +126,8 @@ export class TrackableMap<K,V>{
 
         let out: V[] = [];
 
-        this.map.forEach( value => {
-
-            if( out.indexOf(value) >= 0 ) 
-                return;
-
+        for( let value of this.valueSet() )
             out.push(value);
-        });
 
         return out;
 
