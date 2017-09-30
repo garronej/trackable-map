@@ -1,4 +1,6 @@
-import { TrackableMap } from "../lib/index";
+require("rejection-tracker").main(__dirname, "..", "..");
+
+import { TrackableMap, isVoid } from "../lib/index";
 
 (() => {
 
@@ -20,6 +22,8 @@ import { TrackableMap } from "../lib/index";
 
     console.assert(JSON.stringify(map.intKeysAsSortedArray()) === `[2,3,4]`);
 
+    console.log("PASS");
+
 })();
 
 (() => {
@@ -30,6 +34,8 @@ import { TrackableMap } from "../lib/index";
     map.set("3", "tree");
 
     console.assert(JSON.stringify(map.intKeysAsSortedArray()) === `[3]`);
+
+    console.log("PASS");
 
 })();
 
@@ -49,6 +55,8 @@ import { TrackableMap } from "../lib/index";
     console.assert(JSON.stringify(map.valuesAsArraySortedByKey()) === `["foo","bar","foo"]`);
 
     console.assert(JSON.stringify(map.toObject()) === `{"1":"foo","2":"bar","3":"foo"}`);
+
+    console.log("PASS");
 
 })();
 
@@ -77,6 +85,8 @@ import { TrackableMap } from "../lib/index";
 
     console.assert(!map.size && evtSet && evtDelete);
 
+    console.log("PASS");
+
 })();
 
 
@@ -87,6 +97,8 @@ import { TrackableMap } from "../lib/index";
     map.evtSet.attachOnce(([{ p1, p2 }]) => console.assert(p1 === "foo" && p2 === "bar"));
 
     map.set("_", { "p1": "foo", "p2": "bar" });
+
+    console.log("PASS");
 
 })();
 
@@ -106,6 +118,8 @@ import { TrackableMap } from "../lib/index";
     console.assert(obj === srcObj);
 
     console.assert(map.keyOf(srcObj) === srcKey);
+
+    console.log("PASS");
 
 })();
 
@@ -127,10 +141,12 @@ import { TrackableMap } from "../lib/index";
 
     }
 
+    console.log("PASS");
+
 })();
 
 
-(()=>{
+(() => {
 
     let map = new TrackableMap([
         [0, "foo"],
@@ -138,51 +154,160 @@ import { TrackableMap } from "../lib/index";
         [2, "bar"]
     ]);
 
-    let keysAsArray= new Array<number>();
+    let keysAsArray = new Array<number>();
 
-    for( let key of map.keySet() )
+    for (let key of map.keySet())
         keysAsArray.push(key);
-    
+
     console.assert(JSON.stringify(keysAsArray) === JSON.stringify(map.keysAsArray()));
 
-    let valuesAsArrayNoDuplicate= new Array<string>();
+    let valuesAsArrayNoDuplicate = new Array<string>();
 
-    for( let value of map.valueSet() )
+    for (let value of map.valueSet())
         valuesAsArrayNoDuplicate.push(value);
 
     console.assert(JSON.stringify(valuesAsArrayNoDuplicate) === JSON.stringify(map.valuesAsArrayNoDuplicate()));
 
+    console.log("PASS");
 
 })();
 
-(async ()=>{
 
-    let map= new TrackableMap<number, string>();
+(async () => {
 
-    map.set(0, "foo");
+    let map = new TrackableMap<number, string>();
 
-    let prSet1= map.evtSet.waitFor(100);
+    await (async () => {
 
-    console.assert( map.update(0, "bar") === "foo" );
+        map.evtDelete.waitFor(10).then(() => console.assert(false)).catch(() => { });
+        map.evtUpdate.waitFor(10).then(() => console.assert(false)).catch(() => { });
 
-    console.assert( map.get(0) === "bar" );
+        let events = Promise.all([
+            map.evt.waitFor(0),
+            map.evtCreate.waitFor(0),
+            map.evtSet.waitFor(0)
+        ]);
 
-    try{
+        map.set(0, "foo");
 
-        await prSet1;
+        let [e1, e2, e3] = await events;
 
-        console.assert(false);
 
-    }catch{ }
+        console.assert(
+            e1[0] === "foo" && 
+            e1[1] === 0 &&
+            isVoid(e1[2])
+        );
 
-    let prSet2= map.evtSet.waitFor(100);
+        console.assert(JSON.stringify(e2) === '["foo",0]');
+        console.assert(JSON.stringify(e3) === '["foo",0]');
 
-    console.assert( map.update(1, "baz") === undefined );
+        await new Promise(resolve => setTimeout(resolve, 100));
 
-    let [ value, key ]= await prSet2;
+    })();
 
-    console.assert( (key === 1) && ( value === "baz" ));
+    console.log("PASS1");
+
+    await (async () => {
+
+        map.evtDelete.waitFor(10).then(() => console.assert(false)).catch(() => { });
+        map.evtUpdate.waitFor(10).then(() => console.assert(false)).catch(() => { });
+        map.evt.waitFor(10).then(() => console.assert(false)).catch(() => { });
+        map.evtCreate.waitFor(10).then(() => console.assert(false)).catch(() => { });
+        map.evtSet.waitFor(10).then(() => console.assert(false)).catch(() => { });
+
+        map.set(0, "foo");
+
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+    })();
+
+    console.log("PASS2");
+
+    await (async () => {
+
+        map.evtDelete.waitFor(10).then(() => console.assert(false)).catch(() => { });
+        map.evtCreate.waitFor(10).then(() => console.assert(false)).catch(() => { });
+
+        let events = Promise.all([
+            map.evt.waitFor(0),
+            map.evtSet.waitFor(0),
+            map.evtUpdate.waitFor(0)
+        ]);
+
+        map.set(0, "bar");
+
+        let [e1, e2, e3] = await events;
+
+        console.assert(JSON.stringify(e1) === '["bar",0,"foo"]');
+        console.assert(JSON.stringify(e2) === '["bar",0]');
+        console.assert(JSON.stringify(e3) === '["bar",0,"foo"]');
+
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+    })();
+
+    console.log("PASS3");
+
+    await (async () => {
+
+        map.evtUpdate.waitFor(10).then(() => console.assert(false)).catch(() => { });
+        map.evtCreate.waitFor(10).then(() => console.assert(false)).catch(() => { });
+        map.evtSet.waitFor(10).then(() => console.assert(false)).catch(() => { });
+
+        let events = Promise.all([
+            map.evtDelete.waitFor(0),
+            map.evt.waitFor(0),
+        ]);
+
+        map.delete(0);
+
+        let [e1, e2] = await events;
+
+        console.assert(JSON.stringify(e1) === '["bar",0]');
+
+        console.assert(
+            isVoid(e2[0]) && 
+            e2[1] === 0 &&
+            e2[2] === "bar"
+        );
+
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+    })();
+
+    console.log("PASS4");
+
+    await (async () => {
+
+        map.set(2,"foo");
+        map.set(1,"bar");
+        map.set(0,"baz");
+
+        map.evtUpdate.waitFor(10).then(() => console.assert(false,"m1")).catch(() => { });
+        map.evtCreate.waitFor(10).then(() => console.assert(false,"m2")).catch(() => { });
+        map.evtSet.waitFor(10).then(() => console.assert(false,"m3")).catch(() => { });
+
+        (async ()=>{
+
+                let e1= await map.evtDelete.waitFor(0);
+                let e2= await map.evtDelete.waitFor(0);
+                let e3= await map.evtDelete.waitFor(0);
+
+                console.assert(JSON.stringify(e1) === '["foo",2]', "m4");
+                console.assert(JSON.stringify(e2) === '["bar",1]', "m5");
+                console.assert(JSON.stringify(e3) === '["baz",0]', "m6");
+
+        })();
+
+        map.clear();
+
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+    })();
+
+    console.log("PASS");
 
 })();
 
-console.log("ALL TESTS PASSED");
+

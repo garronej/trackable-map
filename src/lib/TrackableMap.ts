@@ -1,51 +1,84 @@
 import { SyncEvent } from "ts-events-extended";
 
+const _void_= [];
+
+export type Void= never[];
+
+export function isVoid(value: any): value is Void { return value === _void_; }
 
 export class TrackableMap<K,V>{
-
-    private readonly map: Map<K,V>;
-
-    public readonly evtSet= new SyncEvent<[V,K]>();
-    public readonly evtDelete= new SyncEvent<[V,K]>();
 
     public static [Symbol.species]= TrackableMap;
     public [Symbol.iterator]() { return this.map.entries(); }
 
-    constructor(iterable: Iterable<[K,V]> = []){
-        this.map= new Map(iterable);
+    private readonly map: Map<K,V>;
+
+    public static readonly isVoid= isVoid;
+    public isVoid(value: V | Void): value is Void { return value === _void_; }
+
+    /**[ oldValue, key ] */
+    public readonly evtDelete= new SyncEvent<[V,K]>();
+
+    /** [ newValue, key ] */
+    public readonly evtCreate= new SyncEvent<[V, K]>();
+
+    /** [ newValue, key, oldValue ], newValue !== odlValue */
+    public readonly evtUpdate= new SyncEvent<[V,K,V]>();
+
+    /** [ newValue, key ], is equivalent to evtCreateOrUpdate */
+    public readonly evtSet= new SyncEvent<[V,K]>();
+
+    /** [ newValue, key, oldValue ], newValue !== oldValue */
+    public readonly evt= new SyncEvent<[V | Void, K, V | Void]>();
+
+    //oldValue !== newValue
+    private readonly _evt= new SyncEvent<{ 
+        key: K; 
+        oldValue: V | Void; 
+        newValue: V | Void;
+    }>();
+
+    constructor(iterable: Iterable<[K, V]> = []) {
+
+        this.map = new Map(iterable);
+
+        this._evt.attach(
+            ({ key, oldValue, newValue }) => {
+
+                this.evt.post([newValue, key, oldValue]);
+
+                if( isVoid(newValue) )
+                    this.evtDelete.post([oldValue as V, key]);
+
+                if( isVoid(oldValue) ){
+                    this.evtCreate.post([newValue as V, key]);
+                    this.evtSet.post([newValue as V, key]);
+                }
+                
+                if( !isVoid(oldValue) && !isVoid(newValue) ){
+                    this.evtUpdate.post([newValue, key, oldValue]);
+                    this.evtSet.post([newValue, key]);
+                }
+
+            }
+        );
+
     }
 
-    public values() {
-        return this.map.values();
-    }
+    public set(key: K, value: V) {
 
-    public keys() {
-        return this.map.keys();
-    }
+        let oldValue: V | Void;
 
-    public entries() {
-        return this.map.entries();
-    }
-
-    public get(key: K): V | undefined{
-        return this.map.get(key);
-    }
-
-    public get size() {
-        return this.map.size;
-    }
-
-
-    public has(key: K): boolean {
-        return this.map.has(key);
-    }
-
-
-    public set(key: K, value: V): this{
+        if (this.map.has(key)) {
+            oldValue = this.map.get(key)!;
+            if(oldValue === value ) return this;
+        } else {
+            oldValue = _void_;
+        }
 
         this.map.set(key, value);
 
-        this.evtSet.post([value, key]);
+        this._evt.post({ oldValue, key, "newValue": value });
 
         return this;
 
@@ -53,77 +86,57 @@ export class TrackableMap<K,V>{
 
     public delete(key: K): boolean {
 
-        let has= this.map.has(key);
+        if (!this.map.has(key)) return false;
 
-        if( !has ) return false;
-
-        let value = this.map.get(key)!;
+        let oldValue = this.map.get(key)!;
 
         this.map.delete(key);
 
-        this.evtDelete.post([value, key]);
+        this._evt.post({ oldValue, key, "newValue": _void_ });
 
         return true;
 
+    }
+
+    public clear() {
+
+        for (let key of this.map.keys())
+            this.delete(key);
 
     }
 
-    public keySet() {
+    public values() { return this.map.values(); }
 
-        let out= new Set<K>();
+    public keys() { return this.map.keys(); }
 
-        for( let key of this.map.keys() )
-            out.add(key);
-        
-        return out;
+    public entries() { return this.map.entries(); }
 
-    }
+    public get(key: K) { return this.map.get(key); }
 
-    public valueSet() {
+    public get size() { return this.map.size; }
 
-        let out= new Set<V>();
-
-        for( let value of this.map.values() )
-            out.add(value);
-
-        return out;
-
-    }
-
-    public update(key: K, newValue: V): V | undefined {
-
-        if( !this.map.has(key) ){
-
-            this.set(key, newValue);
-
-            return undefined;
-
-        }
-
-        let oldValue= this.map.get(key)!;
-
-        this.map.set(key, newValue);
-
-        return oldValue;
-
-    }
+    public has(key: K) { return this.map.has(key); }
 
 
-    public find(
-        match: (value: V)=> boolean
-    ): V | undefined{
+    //Custom
 
-        for( let value of this.values())
-            if( match(value) ) return value;
-        
+    public keySet() { return new Set(this.map.keys()); }
+
+    public valueSet() { return new Set(this.map.values()); }
+
+    public find(match: (value: V) => boolean): V | undefined {
+
+        for (let value of this.map.values())
+            if (match(value)) return value;
+
         return undefined;
 
     }
 
-    public keyOf( value: V ): K | undefined {
+    public keyOf(value: V): K | undefined {
 
-        for( let key of this.keys() )
-            if( this.get(key) === value ) return key;
+        for (let [key, value_] of this.map)
+            if (value_ === value) return key;
 
         return undefined;
 
@@ -132,9 +145,21 @@ export class TrackableMap<K,V>{
 
     public keysAsArray(): K[] {
 
-        let out: K[] = [];
+        let out = new Array<K>();
 
-        this.map.forEach((_, key) => out.push(key));
+        for (let key of this.map.keys())
+            out.push(key);
+
+        return out;
+
+    }
+
+    public valuesAsArray(): V[] {
+
+        let out = new Array<V>();
+
+        for (let value of this.map.values())
+            out.push(value);
 
         return out;
 
@@ -144,18 +169,20 @@ export class TrackableMap<K,V>{
 
         let out: V[] = [];
 
-        for( let value of this.valueSet() )
+        for (let value of new Set(this.map.values()))
             out.push(value);
 
         return out;
 
     }
 
-    public valuesAsArray(): V[] {
 
-        let out: V[] = [];
+    public toObject(): { [key: string]: V } {
 
-        this.map.forEach(value => out.push(value));
+        let out = {};
+
+        for (let [key, value] of this.map)
+            out[`${key}`] = value;
 
         return out;
 
@@ -180,19 +207,6 @@ export class TrackableMap<K,V>{
 
     }
 
-
-    public toObject(): { [key: string]: V } {
-
-        let out = {};
-
-        for (let key of this.map.keys())
-            out[key.toString()] = this.map.get(key);
-
-        return out;
-
-    }
-
-
     public static intKeyAsSortedArray(object: Object): number[] {
 
         let arr = Object.keys(object)
@@ -211,6 +225,5 @@ export class TrackableMap<K,V>{
 
 
     }
-
 
 }
