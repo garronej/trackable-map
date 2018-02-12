@@ -3,7 +3,7 @@
   "description": "ES2015 Map that post evt wen changed",
   "main": "./dist/lib/index.js",
   "types": "./dist/lib/index.d.ts",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "scripts": {
     "tsc": "./node_modules/.bin/tsc -p ./tsconfig.json",
     "test": "node ./dist/test/main"
@@ -25,6 +25,6 @@
   "devDependencies": {
     "@types/node": "^4.0.0",
     "rejection-tracker": "github:garronej/rejection-tracker",
-    "typescript": "^2.5.2"
+    "typescript": "2.5.3"
   }
 }
