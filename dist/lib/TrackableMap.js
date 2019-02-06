@@ -83,20 +83,20 @@ var TrackableMap = /** @class */ (function (_super) {
         return true;
     };
     TrackableMap.prototype.clear = function () {
+        var e_1, _a;
         try {
-            for (var _a = __values(_super.prototype.keys.call(this)), _b = _a.next(); !_b.done; _b = _a.next()) {
-                var key = _b.value;
+            for (var _b = __values(_super.prototype.keys.call(this)), _c = _b.next(); !_c.done; _c = _b.next()) {
+                var key = _c.value;
                 this.delete(key);
             }
         }
         catch (e_1_1) { e_1 = { error: e_1_1 }; }
         finally {
             try {
-                if (_b && !_b.done && (_c = _a.return)) _c.call(_a);
+                if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
             }
             finally { if (e_1) throw e_1.error; }
         }
-        var e_1, _c;
     };
     TrackableMap[Symbol.species] = TrackableMap;
     TrackableMap.isVoid = isVoid;

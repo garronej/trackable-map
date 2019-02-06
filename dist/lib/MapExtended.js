@@ -56,9 +56,10 @@ var MapExtended = /** @class */ (function () {
     MapExtended.prototype.keySet = function () { return new Set(this.map.keys()); };
     MapExtended.prototype.valueSet = function () { return new Set(this.map.values()); };
     MapExtended.prototype.find = function (match) {
+        var e_1, _a;
         try {
-            for (var _a = __values(this.map.values()), _b = _a.next(); !_b.done; _b = _a.next()) {
-                var value = _b.value;
+            for (var _b = __values(this.map.values()), _c = _b.next(); !_c.done; _c = _b.next()) {
+                var value = _c.value;
                 if (match(value))
                     return value;
             }
@@ -66,17 +67,17 @@ var MapExtended = /** @class */ (function () {
         catch (e_1_1) { e_1 = { error: e_1_1 }; }
         finally {
             try {
-                if (_b && !_b.done && (_c = _a.return)) _c.call(_a);
+                if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
             }
             finally { if (e_1) throw e_1.error; }
         }
         return undefined;
-        var e_1, _c;
     };
     MapExtended.prototype.keyOf = function (value) {
+        var e_2, _a;
         try {
-            for (var _a = __values(this.map), _b = _a.next(); !_b.done; _b = _a.next()) {
-                var _c = __read(_b.value, 2), key = _c[0], value_ = _c[1];
+            for (var _b = __values(this.map), _c = _b.next(); !_c.done; _c = _b.next()) {
+                var _d = __read(_c.value, 2), key = _d[0], value_ = _d[1];
                 if (value_ === value)
                     return key;
             }
@@ -84,106 +85,105 @@ var MapExtended = /** @class */ (function () {
         catch (e_2_1) { e_2 = { error: e_2_1 }; }
         finally {
             try {
-                if (_b && !_b.done && (_d = _a.return)) _d.call(_a);
+                if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
             }
             finally { if (e_2) throw e_2.error; }
         }
         return undefined;
-        var e_2, _d;
     };
     MapExtended.prototype.keysAsArray = function () {
+        var e_3, _a;
         var out = new Array();
         try {
-            for (var _a = __values(this.map.keys()), _b = _a.next(); !_b.done; _b = _a.next()) {
-                var key = _b.value;
+            for (var _b = __values(this.map.keys()), _c = _b.next(); !_c.done; _c = _b.next()) {
+                var key = _c.value;
                 out.push(key);
             }
         }
         catch (e_3_1) { e_3 = { error: e_3_1 }; }
         finally {
             try {
-                if (_b && !_b.done && (_c = _a.return)) _c.call(_a);
+                if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
             }
             finally { if (e_3) throw e_3.error; }
         }
         return out;
-        var e_3, _c;
     };
     MapExtended.prototype.valuesAsArray = function () {
+        var e_4, _a;
         var out = new Array();
         try {
-            for (var _a = __values(this.map.values()), _b = _a.next(); !_b.done; _b = _a.next()) {
-                var value = _b.value;
+            for (var _b = __values(this.map.values()), _c = _b.next(); !_c.done; _c = _b.next()) {
+                var value = _c.value;
                 out.push(value);
             }
         }
         catch (e_4_1) { e_4 = { error: e_4_1 }; }
         finally {
             try {
-                if (_b && !_b.done && (_c = _a.return)) _c.call(_a);
+                if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
             }
             finally { if (e_4) throw e_4.error; }
         }
         return out;
-        var e_4, _c;
     };
     MapExtended.prototype.valuesAsArrayNoDuplicate = function () {
+        var e_5, _a;
         var out = [];
         try {
-            for (var _a = __values(new Set(this.map.values())), _b = _a.next(); !_b.done; _b = _a.next()) {
-                var value = _b.value;
+            for (var _b = __values(new Set(this.map.values())), _c = _b.next(); !_c.done; _c = _b.next()) {
+                var value = _c.value;
                 out.push(value);
             }
         }
         catch (e_5_1) { e_5 = { error: e_5_1 }; }
         finally {
             try {
-                if (_b && !_b.done && (_c = _a.return)) _c.call(_a);
+                if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
             }
             finally { if (e_5) throw e_5.error; }
         }
         return out;
-        var e_5, _c;
     };
     MapExtended.prototype.toObject = function () {
+        var e_6, _a;
         var out = {};
         try {
-            for (var _a = __values(this.map), _b = _a.next(); !_b.done; _b = _a.next()) {
-                var _c = __read(_b.value, 2), key = _c[0], value = _c[1];
+            for (var _b = __values(this.map), _c = _b.next(); !_c.done; _c = _b.next()) {
+                var _d = __read(_c.value, 2), key = _d[0], value = _d[1];
                 out["" + key] = value;
             }
         }
         catch (e_6_1) { e_6 = { error: e_6_1 }; }
         finally {
             try {
-                if (_b && !_b.done && (_d = _a.return)) _d.call(_a);
+                if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
             }
             finally { if (e_6) throw e_6.error; }
         }
         return out;
-        var e_6, _d;
     };
     MapExtended.prototype.intKeysAsSortedArray = function () {
         return MapExtended.intKeyAsSortedArray(this.toObject());
     };
     MapExtended.prototype.valuesAsArraySortedByKey = function () {
+        var e_7, _a;
         var out = [];
         var obj = this.toObject();
         try {
-            for (var _a = __values(this.intKeysAsSortedArray()), _b = _a.next(); !_b.done; _b = _a.next()) {
-                var key = _b.value;
+            for (var _b = __values(this.intKeysAsSortedArray()), _c = _b.next(); !_c.done; _c = _b.next()) {
+                var key = _c.value;
                 out.push(obj[key]);
             }
         }
         catch (e_7_1) { e_7 = { error: e_7_1 }; }
         finally {
             try {
-                if (_b && !_b.done && (_c = _a.return)) _c.call(_a);
+                if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
             }
             finally { if (e_7) throw e_7.error; }
         }
         return out;
-        var e_7, _c;
     };
     MapExtended.intKeyAsSortedArray = function (object) {
         var arr = Object.keys(object)
