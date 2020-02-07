@@ -1,4 +1,4 @@
-import { SyncEvent } from "ts-events-extended";
+import { Evt } from "ts-evt";
 import { MapExtended } from "./MapExtended";
 
 const _void_= [];
@@ -16,22 +16,22 @@ export class TrackableMap<K,V> extends MapExtended<K,V>{
     public isVoid(value: V | Void): value is Void { return value === _void_; }
 
     /**[ oldValue, key ] */
-    public readonly evtDelete= new SyncEvent<[V,K]>();
+    public readonly evtDelete= new Evt<[V,K]>();
 
     /** [ newValue, key ] */
-    public readonly evtCreate= new SyncEvent<[V, K]>();
+    public readonly evtCreate= new Evt<[V, K]>();
 
     /** [ newValue, key, oldValue ], newValue !== odlValue */
-    public readonly evtUpdate= new SyncEvent<[V,K,V]>();
+    public readonly evtUpdate= new Evt<[V,K,V]>();
 
     /** [ newValue, key ], is equivalent to evtCreateOrUpdate */
-    public readonly evtSet= new SyncEvent<[V,K]>();
+    public readonly evtSet= new Evt<[V,K]>();
 
     /** [ newValue, key, oldValue ], newValue !== oldValue */
-    public readonly evt= new SyncEvent<[V | Void, K, V | Void]>();
+    public readonly evt= new Evt<[V | Void, K, V | Void]>();
 
     //oldValue !== newValue
-    private readonly _evt= new SyncEvent<{ 
+    private readonly _evt= new Evt<{ 
         key: K; 
         oldValue: V | Void; 
         newValue: V | Void;

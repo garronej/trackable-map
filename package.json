@@ -20,7 +20,7 @@
     "ts-events"
   ],
   "dependencies": {
-    "ts-events-extended": "garronej/ts-events-extended"
+    "ts-evt": "^4.3.3"
   },
   "devDependencies": {
     "@types/node": "^4.0.0",

@@ -20,7 +20,7 @@ var __values = (this && this.__values) || function (o) {
     };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var ts_events_extended_1 = require("ts-events-extended");
+var ts_evt_1 = require("ts-evt");
 var MapExtended_1 = require("./MapExtended");
 var _void_ = [];
 function isVoid(value) { return value === _void_; }
@@ -31,17 +31,17 @@ var TrackableMap = /** @class */ (function (_super) {
         if (iterable === void 0) { iterable = []; }
         var _this = _super.call(this, iterable) || this;
         /**[ oldValue, key ] */
-        _this.evtDelete = new ts_events_extended_1.SyncEvent();
+        _this.evtDelete = new ts_evt_1.Evt();
         /** [ newValue, key ] */
-        _this.evtCreate = new ts_events_extended_1.SyncEvent();
+        _this.evtCreate = new ts_evt_1.Evt();
         /** [ newValue, key, oldValue ], newValue !== odlValue */
-        _this.evtUpdate = new ts_events_extended_1.SyncEvent();
+        _this.evtUpdate = new ts_evt_1.Evt();
         /** [ newValue, key ], is equivalent to evtCreateOrUpdate */
-        _this.evtSet = new ts_events_extended_1.SyncEvent();
+        _this.evtSet = new ts_evt_1.Evt();
         /** [ newValue, key, oldValue ], newValue !== oldValue */
-        _this.evt = new ts_events_extended_1.SyncEvent();
+        _this.evt = new ts_evt_1.Evt();
         //oldValue !== newValue
-        _this._evt = new ts_events_extended_1.SyncEvent();
+        _this._evt = new ts_evt_1.Evt();
         _this._evt.attach(function (_a) {
             var key = _a.key, oldValue = _a.oldValue, newValue = _a.newValue;
             _this.evt.post([newValue, key, oldValue]);
