@@ -3,7 +3,7 @@
   "description": "ES2015 Map that post evt wen changed",
   "main": "./dist/lib/index.js",
   "types": "./dist/lib/index.d.ts",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "scripts": {
     "tsc": "./node_modules/.bin/tsc -p ./tsconfig.json",
     "test": "node ./dist/test/main"
@@ -20,7 +20,7 @@
     "ts-events"
   ],
   "dependencies": {
-    "ts-evt": "^4.3.3"
+    "ts-evt": "^5.0.2"
   },
   "devDependencies": {
     "@types/node": "^4.0.0",
