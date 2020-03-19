@@ -1,4 +1,4 @@
-import { Evt } from "ts-evt";
+import { Evt } from "evt";
 import { MapExtended } from "./MapExtended";
 export declare type Void = never[];
 export declare function isVoid(value: any): value is Void;
