@@ -1,4 +1,3 @@
-import { Evt } from "evt";
 import { MapExtended } from "./MapExtended";
 export declare type Void = never[];
 export declare function isVoid(value: any): value is Void;
@@ -8,15 +7,15 @@ export declare class TrackableMap<K, V> extends MapExtended<K, V> {
     static readonly isVoid: typeof isVoid;
     isVoid(value: V | Void): value is Void;
     /**[ oldValue, key ] */
-    readonly evtDelete: Evt<[V, K]>;
+    readonly evtDelete: import("evt/dist/lib/types").Evt<[V, K]>;
     /** [ newValue, key ] */
-    readonly evtCreate: Evt<[V, K]>;
+    readonly evtCreate: import("evt/dist/lib/types").Evt<[V, K]>;
     /** [ newValue, key, oldValue ], newValue !== odlValue */
-    readonly evtUpdate: Evt<[V, K, V]>;
+    readonly evtUpdate: import("evt/dist/lib/types").Evt<[V, K, V]>;
     /** [ newValue, key ], is equivalent to evtCreateOrUpdate */
-    readonly evtSet: Evt<[V, K]>;
+    readonly evtSet: import("evt/dist/lib/types").Evt<[V, K]>;
     /** [ newValue, key, oldValue ], newValue !== oldValue */
-    readonly evt: Evt<[never[] | V, K, never[] | V]>;
+    readonly evt: import("evt/dist/lib/types").Evt<[never[] | V, K, never[] | V]>;
     private readonly _evt;
     constructor(iterable?: Iterable<[K, V]>);
     set(key: K, value: V): this;
