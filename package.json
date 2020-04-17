@@ -20,7 +20,7 @@
     "ts-events"
   ],
   "dependencies": {
-    "evt": "^1.6.2"
+    "evt": "^1.6.5"
   },
   "devDependencies": {
     "@types/node": "^4.0.0",
